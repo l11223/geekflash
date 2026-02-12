@@ -68,7 +68,7 @@ pub async fn get_device_status() -> Result<DeviceStatus, String> {
 /// Start background polling task (called during app setup).
 /// Polls every 3 seconds and emits "device-status" event only when status changes.
 pub fn start_device_polling(app: AppHandle) {
-    tokio::spawn(async move {
+    std::thread::spawn(move || {
         let mut last_mode = String::new();
 
         loop {
@@ -81,7 +81,7 @@ pub fn start_device_polling(app: AppHandle) {
                 }
             }
 
-            tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+            std::thread::sleep(std::time::Duration::from_secs(3));
         }
     });
 }
