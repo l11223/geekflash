@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="50%" stop-color="#16213e"/>
+      <stop offset="100%" stop-color="#0f0f23"/>
+    </linearGradient>
+    <linearGradient id="boltGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#ff4d6d"/>
+      <stop offset="50%" stop-color="#e94560"/>
+      <stop offset="100%" stop-color="#c9184a"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e94560" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#e94560" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="circuitGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e94560" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#e94560" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Background rounded square -->
+  <rect x="8" y="8" width="496" height="496" rx="108" ry="108" fill="url(#bgGrad)"/>
+  <!-- Subtle border -->
+  <rect x="8" y="8" width="496" height="496" rx="108" ry="108" fill="none" stroke="#e94560" stroke-opacity="0.15" stroke-width="1.5"/>
+  <!-- Background glow behind bolt -->
+  <ellipse cx="256" cy="240" rx="100" ry="120" fill="#e94560" opacity="0.06" filter="url(#softGlow)"/>
+  <!-- Circuit traces - left side -->
+  <g opacity="0.35">
+    <line x1="60" y1="180" x2="150" y2="180" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="70" y1="220" x2="140" y2="220" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="60" y1="260" x2="150" y2="260" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="70" y1="300" x2="140" y2="300" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="60" y1="340" x2="150" y2="340" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="150" cy="180" r="3" fill="#e94560"/>
+    <circle cx="140" cy="220" r="3" fill="#e94560"/>
+    <circle cx="150" cy="260" r="3" fill="#e94560"/>
+    <circle cx="140" cy="300" r="3" fill="#e94560"/>
+    <circle cx="150" cy="340" r="3" fill="#e94560"/>
+  </g>
+  <!-- Circuit traces - right side -->
+  <g opacity="0.35">
+    <line x1="362" y1="180" x2="452" y2="180" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="372" y1="220" x2="442" y2="220" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="362" y1="260" x2="452" y2="260" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="372" y1="300" x2="442" y2="300" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="362" y1="340" x2="452" y2="340" stroke="#e94560" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="362" cy="180" r="3" fill="#e94560"/>
+    <circle cx="372" cy="220" r="3" fill="#e94560"/>
+    <circle cx="362" cy="260" r="3" fill="#e94560"/>
+    <circle cx="372" cy="300" r="3" fill="#e94560"/>
+    <circle cx="362" cy="340" r="3" fill="#e94560"/>
+  </g>
+  <!-- Central chip frame -->
+  <rect x="160" y="150" width="192" height="220" rx="16" ry="16" fill="#1e1e3a" stroke="#2a2a4a" stroke-width="2"/>
+  <!-- Inner chip surface -->
+  <rect x="170" y="160" width="172" height="200" rx="10" ry="10" fill="#222244"/>
+  <!-- Lightning bolt - hero element -->
+  <path d="M 290 180 L 242 262 L 274 262 L 222 360 L 310 244 L 276 244 Z" fill="url(#boltGrad)" filter="url(#glow)"/>
+  <!-- Text "GF" at bottom -->
+  <text x="256" y="440" text-anchor="middle" font-family="SF Pro Display, -apple-system, Helvetica Neue, sans-serif" font-size="42" font-weight="800" fill="#e94560" opacity="0.8" letter-spacing="6">GF</text>
+</svg>

@@ -1,16 +1,6 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { HardDrive, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { HardDrive, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { FilePickerField } from "@/components/FilePickerField";
 import type { AppConfig, CommandResult } from "@/types";
 import type { ActionValidation } from "@/hooks/useActionValidation";
@@ -43,12 +33,15 @@ export function GptFixTab({ config, updateConfig, validation }: GptFixTabProps) 
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>GPT Slot 修复</CardTitle>
-        <CardDescription>修复 GPT 分区表 slot priority，解决卡 fastboot 问题</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="glass-card rounded-2xl p-6 space-y-6">
+      <div className="space-y-1">
+        <h2 className="text-lg font-bold text-foreground">GPT Slot 修复</h2>
+        <p className="text-sm text-muted-foreground/70">
+          修复 GPT 分区表 slot priority，解决卡 fastboot 问题
+        </p>
+      </div>
+
+      <div className="space-y-4">
         <FilePickerField
           label="GPT 主分区 (.bin)"
           value={config.gpt_main_bin}
@@ -67,15 +60,34 @@ export function GptFixTab({ config, updateConfig, validation }: GptFixTabProps) 
           filters={[{ name: "ELF Loader", extensions: ["elf"] }]}
           onChange={(path) => updateConfig({ firehose_loader: path })}
         />
-      </CardContent>
-      <CardFooter className="flex items-center gap-4">
-        <Button disabled={!validation.canFixGpt || loading} onClick={handleFix}>
-          {loading ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <HardDrive className="mr-1.5 h-4 w-4" />}
+      </div>
+
+      <div className="flex items-center gap-4 pt-2">
+        <button
+          disabled={!validation.canFixGpt || loading}
+          onClick={handleFix}
+          className="glow-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
+        >
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <HardDrive className="h-4 w-4" />
+          )}
           修复 GPT Slot
-        </Button>
-        {result === "success" && <Badge className="bg-green-600 text-white">成功</Badge>}
-        {result === "error" && <Badge variant="destructive">失败</Badge>}
-      </CardFooter>
-    </Card>
+        </button>
+        {result === "success" && (
+          <div className="flex items-center gap-1.5 text-emerald-400 text-sm font-medium">
+            <CheckCircle2 className="h-4 w-4" />
+            修复成功
+          </div>
+        )}
+        {result === "error" && (
+          <div className="flex items-center gap-1.5 text-red-400 text-sm font-medium">
+            <XCircle className="h-4 w-4" />
+            修复失败
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

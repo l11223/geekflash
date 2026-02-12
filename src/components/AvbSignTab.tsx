@@ -1,17 +1,7 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { Shield, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Shield, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { FilePickerField } from "@/components/FilePickerField";
 import type { AppConfig, AvbParams, CommandResult } from "@/types";
 import type { ActionValidation } from "@/hooks/useActionValidation";
@@ -49,12 +39,15 @@ export function AvbSignTab({ config, updateConfig, validation }: AvbSignTabProps
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>AVB 签名</CardTitle>
-        <CardDescription>对 boot.img 进行 AVB 签名，用于 BL 锁定状态下刷入</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="glass-card rounded-2xl p-6 space-y-6">
+      <div className="space-y-1">
+        <h2 className="text-lg font-bold text-foreground">AVB 签名</h2>
+        <p className="text-sm text-muted-foreground/70">
+          对 boot.img 进行 AVB 签名，用于 BL 锁定状态下刷入
+        </p>
+      </div>
+
+      <div className="space-y-4">
         <FilePickerField
           label="Boot 镜像 (.img)"
           value={config.patched_boot_img}
@@ -73,66 +66,107 @@ export function AvbSignTab({ config, updateConfig, validation }: AvbSignTabProps
           filters={[{ name: "PEM Key", extensions: ["pem"] }]}
           onChange={(path) => updateConfig({ avb_key_path: path })}
         />
+      </div>
 
-        <div className="border-t border-border pt-4 space-y-3">
-          <h4 className="text-sm font-medium text-foreground">AVB 签名参数</h4>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-sm text-muted-foreground">partition_size</label>
-              <Input
-                type="number"
-                value={config.avb_params.partition_size}
-                onChange={(e) => updateAvbParams({ partition_size: Number(e.target.value) })}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-sm text-muted-foreground">algorithm</label>
-              <Input
-                value={config.avb_params.algorithm}
-                onChange={(e) => updateAvbParams({ algorithm: e.target.value })}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-sm text-muted-foreground">rollback_index</label>
-              <Input
-                type="number"
-                value={config.avb_params.rollback_index}
-                onChange={(e) => updateAvbParams({ rollback_index: Number(e.target.value) })}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-sm text-muted-foreground">salt</label>
-              <Input
-                value={config.avb_params.salt}
-                onChange={(e) => updateAvbParams({ salt: e.target.value })}
-              />
-            </div>
-          </div>
-
+      {/* AVB Parameters */}
+      <div className="border-t border-border/30 pt-5 space-y-4">
+        <h3 className="text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider">
+          AVB 签名参数
+        </h3>
+        <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <label className="text-sm text-muted-foreground">Props（只读）</label>
-            <div className="rounded-md border border-border bg-muted/50 p-3 space-y-1 font-mono text-xs">
-              {config.avb_params.props.map((prop, i) => (
-                <div key={i} className="text-muted-foreground">
-                  {prop.key}={prop.value}
-                </div>
-              ))}
-              {config.avb_params.props.length === 0 && (
-                <div className="text-muted-foreground">无 prop 配置</div>
-              )}
-            </div>
+            <label className="text-xs text-muted-foreground/60">
+              partition_size
+            </label>
+            <Input
+              type="number"
+              value={config.avb_params.partition_size}
+              onChange={(e) =>
+                updateAvbParams({ partition_size: Number(e.target.value) })
+              }
+              className="bg-secondary/30 border-border/50 focus:border-primary/50"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs text-muted-foreground/60">
+              algorithm
+            </label>
+            <Input
+              value={config.avb_params.algorithm}
+              onChange={(e) =>
+                updateAvbParams({ algorithm: e.target.value })
+              }
+              className="bg-secondary/30 border-border/50 focus:border-primary/50"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs text-muted-foreground/60">
+              rollback_index
+            </label>
+            <Input
+              type="number"
+              value={config.avb_params.rollback_index}
+              onChange={(e) =>
+                updateAvbParams({ rollback_index: Number(e.target.value) })
+              }
+              className="bg-secondary/30 border-border/50 focus:border-primary/50"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs text-muted-foreground/60">salt</label>
+            <Input
+              value={config.avb_params.salt}
+              onChange={(e) => updateAvbParams({ salt: e.target.value })}
+              className="bg-secondary/30 border-border/50 focus:border-primary/50"
+            />
           </div>
         </div>
-      </CardContent>
-      <CardFooter className="flex items-center gap-4">
-        <Button disabled={!validation.canSignAvb || loading} onClick={handleSign}>
-          {loading ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Shield className="mr-1.5 h-4 w-4" />}
+
+        <div className="space-y-1.5">
+          <label className="text-xs text-muted-foreground/60">
+            Props（只读）
+          </label>
+          <div className="rounded-xl border border-border/30 bg-secondary/20 p-3 space-y-1 font-mono text-[11px]">
+            {config.avb_params.props.map((prop, i) => (
+              <div key={i} className="text-muted-foreground/70">
+                {prop.key}={prop.value}
+              </div>
+            ))}
+            {config.avb_params.props.length === 0 && (
+              <div className="text-muted-foreground/40 italic">
+                无 prop 配置
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-4 pt-2">
+        <button
+          disabled={!validation.canSignAvb || loading}
+          onClick={handleSign}
+          className="glow-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
+        >
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Shield className="h-4 w-4" />
+          )}
           AVB 签名
-        </Button>
-        {result === "success" && <Badge className="bg-green-600 text-white">成功</Badge>}
-        {result === "error" && <Badge variant="destructive">失败</Badge>}
-      </CardFooter>
-    </Card>
+        </button>
+        {result === "success" && (
+          <div className="flex items-center gap-1.5 text-emerald-400 text-sm font-medium">
+            <CheckCircle2 className="h-4 w-4" />
+            签名成功
+          </div>
+        )}
+        {result === "error" && (
+          <div className="flex items-center gap-1.5 text-red-400 text-sm font-medium">
+            <XCircle className="h-4 w-4" />
+            签名失败
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

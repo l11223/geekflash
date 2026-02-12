@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -22,22 +22,50 @@ export function LogPanel({ logs, onClear }: LogPanelProps) {
   }, [logs]);
 
   return (
-    <div className="flex flex-col border-t border-border bg-card" style={{ height: 200 }}>
-      <div className="flex items-center justify-between px-4 py-1.5 border-b border-border">
-        <span className="text-xs font-medium text-muted-foreground">日志输出</span>
-        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClear}>
-          <Trash2 className="h-3.5 w-3.5" />
+    <div
+      className="flex flex-col border-t border-border/50 bg-card/60"
+      style={{ height: 180 }}
+    >
+      <div className="flex items-center justify-between px-5 py-2 border-b border-border/30">
+        <div className="flex items-center gap-2">
+          <Terminal className="h-3.5 w-3.5 text-primary/60" />
+          <span className="text-xs font-semibold text-muted-foreground tracking-wide uppercase">
+            日志输出
+          </span>
+          {logs.length > 0 && (
+            <span className="text-[10px] text-muted-foreground/50 ml-1">
+              ({logs.length})
+            </span>
+          )}
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 text-muted-foreground/50 hover:text-primary"
+          onClick={onClear}
+        >
+          <Trash2 className="h-3 w-3" />
         </Button>
       </div>
-      <ScrollArea className="flex-1 px-4 py-2">
-        <div className="space-y-0.5 font-mono text-xs">
+      <ScrollArea className="flex-1 px-5 py-2">
+        <div className="space-y-px font-mono text-[11px] leading-5">
           {logs.length === 0 && (
-            <p className="text-muted-foreground">暂无日志</p>
+            <p className="text-muted-foreground/40 italic">
+              等待操作...
+            </p>
           )}
           {logs.map((log, i) => (
-            <div key={i} className="flex gap-2">
-              <span className="shrink-0 text-muted-foreground">{log.timestamp}</span>
-              <span className={log.stream === "stderr" ? "text-orange-400" : "text-foreground"}>
+            <div key={i} className="flex gap-3 log-line px-2 py-0.5 rounded">
+              <span className="shrink-0 text-muted-foreground/40 tabular-nums">
+                {log.timestamp}
+              </span>
+              <span
+                className={
+                  log.stream === "stderr"
+                    ? "text-orange-400/90"
+                    : "text-foreground/80"
+                }
+              >
                 {log.content}
               </span>
             </div>

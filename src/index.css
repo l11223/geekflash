@@ -4,24 +4,24 @@
 
 @layer base {
   :root {
-    --background: 230 30% 14%;
-    --foreground: 240 25% 93%;
-    --card: 235 30% 19%;
-    --card-foreground: 240 25% 93%;
-    --popover: 235 30% 19%;
-    --popover-foreground: 240 25% 93%;
+    --background: 232 33% 10%;
+    --foreground: 220 20% 92%;
+    --card: 232 30% 14%;
+    --card-foreground: 220 20% 92%;
+    --popover: 232 30% 14%;
+    --popover-foreground: 220 20% 92%;
     --primary: 351 79% 59%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 27% 20%;
-    --secondary-foreground: 240 25% 93%;
-    --muted: 240 27% 23%;
-    --muted-foreground: 248 12% 65%;
+    --secondary: 232 25% 18%;
+    --secondary-foreground: 220 20% 92%;
+    --muted: 232 22% 20%;
+    --muted-foreground: 230 12% 55%;
     --accent: 351 79% 59%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 100% 63%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 22% 29%;
-    --input: 240 22% 29%;
+    --border: 232 20% 22%;
+    --input: 232 20% 22%;
     --ring: 351 79% 59%;
     --radius: 0.75rem;
   }
@@ -34,5 +34,114 @@
   body {
     @apply bg-background text-foreground;
     margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* Glass morphism card */
+.glass-card {
+  background: linear-gradient(135deg, hsl(232 30% 15% / 0.8), hsl(232 30% 12% / 0.6));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsl(232 20% 26% / 0.5);
+  box-shadow:
+    0 0 0 1px hsl(232 20% 30% / 0.1),
+    0 8px 32px hsl(0 0% 0% / 0.3),
+    inset 0 1px 0 hsl(0 0% 100% / 0.03);
+}
+
+.glass-card:hover {
+  border-color: hsl(351 79% 59% / 0.2);
+  box-shadow:
+    0 0 0 1px hsl(351 79% 59% / 0.05),
+    0 8px 32px hsl(0 0% 0% / 0.35),
+    inset 0 1px 0 hsl(0 0% 100% / 0.04);
+}
+
+/* Glow button */
+.glow-btn {
+  position: relative;
+  background: linear-gradient(135deg, #e94560, #c9184a);
+  box-shadow: 0 0 20px hsl(351 79% 59% / 0.25), 0 4px 12px hsl(0 0% 0% / 0.3);
+  transition: all 0.3s ease;
+}
+
+.glow-btn:hover:not(:disabled) {
+  box-shadow: 0 0 30px hsl(351 79% 59% / 0.4), 0 4px 16px hsl(0 0% 0% / 0.4);
+  transform: translateY(-1px);
+}
+
+.glow-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.glow-btn:disabled {
+  opacity: 0.4;
+  background: linear-gradient(135deg, hsl(232 22% 25%), hsl(232 22% 20%));
+  box-shadow: none;
+}
+
+/* Status pulse animation */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 4px currentColor; opacity: 1; }
+  50% { box-shadow: 0 0 12px currentColor; opacity: 0.7; }
+}
+
+.status-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Subtle gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #e94560, #ff6b81);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Log panel styling */
+.log-line:nth-child(even) {
+  background: hsl(232 30% 12% / 0.3);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(232 20% 30%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(232 20% 40%);
+}
+
+/* Tab indicator animation */
+.tab-indicator {
+  position: relative;
+}
+
+.tab-indicator::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e94560, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tab-indicator[data-state="active"]::after {
+  opacity: 1;
 }

@@ -1,16 +1,6 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { RotateCcw, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { RotateCcw, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { FilePickerField } from "@/components/FilePickerField";
 import type { AppConfig, CommandResult } from "@/types";
 import type { ActionValidation } from "@/hooks/useActionValidation";
@@ -42,12 +32,15 @@ export function RestoreBootTab({ config, updateConfig, validation }: RestoreBoot
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>恢复原厂 Boot</CardTitle>
-        <CardDescription>将原厂 boot.img 刷入 boot_a 分区，用于救砖</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="glass-card rounded-2xl p-6 space-y-6">
+      <div className="space-y-1">
+        <h2 className="text-lg font-bold text-foreground">恢复原厂 Boot</h2>
+        <p className="text-sm text-muted-foreground/70">
+          将原厂 boot.img 刷入 boot_a 分区，用于救砖恢复
+        </p>
+      </div>
+
+      <div className="space-y-4">
         <FilePickerField
           label="原厂 Boot 镜像 (.img)"
           value={config.stock_boot_img}
@@ -60,15 +53,34 @@ export function RestoreBootTab({ config, updateConfig, validation }: RestoreBoot
           filters={[{ name: "ELF Loader", extensions: ["elf"] }]}
           onChange={(path) => updateConfig({ firehose_loader: path })}
         />
-      </CardContent>
-      <CardFooter className="flex items-center gap-4">
-        <Button disabled={!validation.canRestoreBoot || loading} onClick={handleRestore}>
-          {loading ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <RotateCcw className="mr-1.5 h-4 w-4" />}
+      </div>
+
+      <div className="flex items-center gap-4 pt-2">
+        <button
+          disabled={!validation.canRestoreBoot || loading}
+          onClick={handleRestore}
+          className="glow-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
+        >
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <RotateCcw className="h-4 w-4" />
+          )}
           恢复原厂 Boot
-        </Button>
-        {result === "success" && <Badge className="bg-green-600 text-white">成功</Badge>}
-        {result === "error" && <Badge variant="destructive">失败</Badge>}
-      </CardFooter>
-    </Card>
+        </button>
+        {result === "success" && (
+          <div className="flex items-center gap-1.5 text-emerald-400 text-sm font-medium">
+            <CheckCircle2 className="h-4 w-4" />
+            恢复成功
+          </div>
+        )}
+        {result === "error" && (
+          <div className="flex items-center gap-1.5 text-red-400 text-sm font-medium">
+            <XCircle className="h-4 w-4" />
+            恢复失败
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
