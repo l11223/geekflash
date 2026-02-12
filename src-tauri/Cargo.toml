@@ -1,6 +1,6 @@
 [package]
 name = "geekflash"
-version = "0.1.0"
+version = "0.2.2"
 description = "GeekFlash — Y700 EDL Flash Tool"
 authors = ["GeekFlash"]
 edition = "2021"
