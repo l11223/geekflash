@@ -1,7 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Trash2, Terminal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export interface LogLine {
   timestamp: string;
@@ -16,54 +14,56 @@ interface LogPanelProps {
 
 export function LogPanel({ logs, onClear }: LogPanelProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [logs]);
 
   return (
-    <div
-      className="flex flex-col border-t border-border/50 bg-card/60"
-      style={{ height: 180 }}
-    >
-      <div className="flex items-center justify-between px-5 py-2 border-b border-border/30">
+    <div className="flex flex-col border-t border-border/60" style={{ height: 160 }}>
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 h-8 flex-shrink-0 bg-[hsl(228_22%_10%)]">
         <div className="flex items-center gap-2">
-          <Terminal className="h-3.5 w-3.5 text-primary/60" />
-          <span className="text-xs font-semibold text-muted-foreground tracking-wide uppercase">
-            日志输出
+          <Terminal className="w-3 h-3 text-muted-foreground/40" />
+          <span className="section-label" style={{ marginBottom: 0 }}>
+            终端
           </span>
           {logs.length > 0 && (
-            <span className="text-[10px] text-muted-foreground/50 ml-1">
-              ({logs.length})
+            <span className="text-[10px] tabular-nums text-muted-foreground/30">
+              {logs.length}
             </span>
           )}
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6 text-muted-foreground/50 hover:text-primary"
+        <button
           onClick={onClear}
+          className="w-5 h-5 flex items-center justify-center rounded text-muted-foreground/30 hover:text-muted-foreground/60 transition-colors"
         >
-          <Trash2 className="h-3 w-3" />
-        </Button>
+          <Trash2 className="w-3 h-3" />
+        </button>
       </div>
-      <ScrollArea className="flex-1 px-5 py-2">
-        <div className="space-y-px font-mono text-[11px] leading-5">
+
+      {/* Log content */}
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-auto px-4 py-1.5 bg-[hsl(228_24%_7%)]"
+      >
+        <div className="font-mono text-[11px] leading-[1.6]">
           {logs.length === 0 && (
-            <p className="text-muted-foreground/40 italic">
+            <div className="text-muted-foreground/25 py-2">
               等待操作...
-            </p>
+            </div>
           )}
           {logs.map((log, i) => (
-            <div key={i} className="flex gap-3 log-line px-2 py-0.5 rounded">
-              <span className="shrink-0 text-muted-foreground/40 tabular-nums">
+            <div key={i} className="flex gap-3 log-row px-1.5 py-px rounded-sm">
+              <span className="shrink-0 text-muted-foreground/25 tabular-nums select-none">
                 {log.timestamp}
               </span>
               <span
                 className={
                   log.stream === "stderr"
-                    ? "text-orange-400/90"
-                    : "text-foreground/80"
+                    ? "text-amber-500/80"
+                    : "text-foreground/60"
                 }
               >
                 {log.content}
@@ -72,7 +72,7 @@ export function LogPanel({ logs, onClear }: LogPanelProps) {
           ))}
           <div ref={bottomRef} />
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }

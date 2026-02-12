@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { Shield, Loader2, CheckCircle2, XCircle } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { FilePickerField } from "@/components/FilePickerField";
 import type { AppConfig, AvbParams, CommandResult } from "@/types";
 import type { ActionValidation } from "@/hooks/useActionValidation";
@@ -12,7 +11,11 @@ interface AvbSignTabProps {
   validation: ActionValidation;
 }
 
-export function AvbSignTab({ config, updateConfig, validation }: AvbSignTabProps) {
+export function AvbSignTab({
+  config,
+  updateConfig,
+  validation,
+}: AvbSignTabProps) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<"success" | "error" | null>(null);
 
@@ -39,15 +42,18 @@ export function AvbSignTab({ config, updateConfig, validation }: AvbSignTabProps
   };
 
   return (
-    <div className="glass-card rounded-2xl p-6 space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-lg font-bold text-foreground">AVB 签名</h2>
-        <p className="text-sm text-muted-foreground/70">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-lg font-semibold text-foreground/95 tracking-tight">
+          AVB 签名
+        </h1>
+        <p className="text-sm text-muted-foreground/60 mt-1">
           对 boot.img 进行 AVB 签名，用于 BL 锁定状态下刷入
         </p>
       </div>
 
-      <div className="space-y-4">
+      {/* File fields */}
+      <div className="content-card p-5 space-y-4">
         <FilePickerField
           label="Boot 镜像 (.img)"
           value={config.patched_boot_img}
@@ -69,71 +75,75 @@ export function AvbSignTab({ config, updateConfig, validation }: AvbSignTabProps
       </div>
 
       {/* AVB Parameters */}
-      <div className="border-t border-border/30 pt-5 space-y-4">
-        <h3 className="text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider">
-          AVB 签名参数
-        </h3>
-        <div className="grid grid-cols-2 gap-4">
+      <div className="content-card p-5 space-y-4">
+        <div className="section-label">签名参数</div>
+
+        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
-            <label className="text-xs text-muted-foreground/60">
+            <label className="text-[11px] text-muted-foreground/50">
               partition_size
             </label>
-            <Input
+            <input
               type="number"
               value={config.avb_params.partition_size}
               onChange={(e) =>
                 updateAvbParams({ partition_size: Number(e.target.value) })
               }
-              className="bg-secondary/30 border-border/50 focus:border-primary/50"
+              className="param-input"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs text-muted-foreground/60">
+            <label className="text-[11px] text-muted-foreground/50">
               algorithm
             </label>
-            <Input
+            <input
               value={config.avb_params.algorithm}
               onChange={(e) =>
                 updateAvbParams({ algorithm: e.target.value })
               }
-              className="bg-secondary/30 border-border/50 focus:border-primary/50"
+              className="param-input"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs text-muted-foreground/60">
+            <label className="text-[11px] text-muted-foreground/50">
               rollback_index
             </label>
-            <Input
+            <input
               type="number"
               value={config.avb_params.rollback_index}
               onChange={(e) =>
                 updateAvbParams({ rollback_index: Number(e.target.value) })
               }
-              className="bg-secondary/30 border-border/50 focus:border-primary/50"
+              className="param-input"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs text-muted-foreground/60">salt</label>
-            <Input
+            <label className="text-[11px] text-muted-foreground/50">
+              salt
+            </label>
+            <input
               value={config.avb_params.salt}
               onChange={(e) => updateAvbParams({ salt: e.target.value })}
-              className="bg-secondary/30 border-border/50 focus:border-primary/50"
+              className="param-input"
             />
           </div>
         </div>
 
+        {/* Props */}
         <div className="space-y-1.5">
-          <label className="text-xs text-muted-foreground/60">
+          <label className="text-[11px] text-muted-foreground/50">
             Props（只读）
           </label>
-          <div className="rounded-xl border border-border/30 bg-secondary/20 p-3 space-y-1 font-mono text-[11px]">
+          <div className="rounded-md border border-border/60 bg-[hsl(228_24%_8%)] p-3 space-y-0.5 font-mono text-[11px]">
             {config.avb_params.props.map((prop, i) => (
-              <div key={i} className="text-muted-foreground/70">
-                {prop.key}={prop.value}
+              <div key={i} className="text-muted-foreground/50">
+                {prop.key}
+                <span className="text-muted-foreground/30">=</span>
+                {prop.value}
               </div>
             ))}
             {config.avb_params.props.length === 0 && (
-              <div className="text-muted-foreground/40 italic">
+              <div className="text-muted-foreground/25 italic">
                 无 prop 配置
               </div>
             )}
@@ -141,30 +151,31 @@ export function AvbSignTab({ config, updateConfig, validation }: AvbSignTabProps
         </div>
       </div>
 
-      <div className="flex items-center gap-4 pt-2">
+      {/* Action */}
+      <div className="flex items-center gap-3">
         <button
           disabled={!validation.canSignAvb || loading}
           onClick={handleSign}
-          className="glow-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
+          className="action-btn"
         >
           {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
-            <Shield className="h-4 w-4" />
+            <Shield className="w-4 h-4" />
           )}
           AVB 签名
         </button>
         {result === "success" && (
-          <div className="flex items-center gap-1.5 text-emerald-400 text-sm font-medium">
-            <CheckCircle2 className="h-4 w-4" />
+          <span className="result-badge success">
+            <CheckCircle2 className="w-3.5 h-3.5" />
             签名成功
-          </div>
+          </span>
         )}
         {result === "error" && (
-          <div className="flex items-center gap-1.5 text-red-400 text-sm font-medium">
-            <XCircle className="h-4 w-4" />
+          <span className="result-badge error">
+            <XCircle className="w-3.5 h-3.5" />
             签名失败
-          </div>
+          </span>
         )}
       </div>
     </div>

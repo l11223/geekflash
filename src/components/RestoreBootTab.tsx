@@ -11,7 +11,11 @@ interface RestoreBootTabProps {
   validation: ActionValidation;
 }
 
-export function RestoreBootTab({ config, updateConfig, validation }: RestoreBootTabProps) {
+export function RestoreBootTab({
+  config,
+  updateConfig,
+  validation,
+}: RestoreBootTabProps) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<"success" | "error" | null>(null);
 
@@ -32,15 +36,17 @@ export function RestoreBootTab({ config, updateConfig, validation }: RestoreBoot
   };
 
   return (
-    <div className="glass-card rounded-2xl p-6 space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-lg font-bold text-foreground">恢复原厂 Boot</h2>
-        <p className="text-sm text-muted-foreground/70">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-lg font-semibold text-foreground/95 tracking-tight">
+          恢复原厂 Boot
+        </h1>
+        <p className="text-sm text-muted-foreground/60 mt-1">
           将原厂 boot.img 刷入 boot_a 分区，用于救砖恢复
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="content-card p-5 space-y-4">
         <FilePickerField
           label="原厂 Boot 镜像 (.img)"
           value={config.stock_boot_img}
@@ -55,30 +61,30 @@ export function RestoreBootTab({ config, updateConfig, validation }: RestoreBoot
         />
       </div>
 
-      <div className="flex items-center gap-4 pt-2">
+      <div className="flex items-center gap-3">
         <button
           disabled={!validation.canRestoreBoot || loading}
           onClick={handleRestore}
-          className="glow-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
+          className="action-btn"
         >
           {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="w-4 h-4" />
           )}
           恢复原厂 Boot
         </button>
         {result === "success" && (
-          <div className="flex items-center gap-1.5 text-emerald-400 text-sm font-medium">
-            <CheckCircle2 className="h-4 w-4" />
+          <span className="result-badge success">
+            <CheckCircle2 className="w-3.5 h-3.5" />
             恢复成功
-          </div>
+          </span>
         )}
         {result === "error" && (
-          <div className="flex items-center gap-1.5 text-red-400 text-sm font-medium">
-            <XCircle className="h-4 w-4" />
+          <span className="result-badge error">
+            <XCircle className="w-3.5 h-3.5" />
             恢复失败
-          </div>
+          </span>
         )}
       </div>
     </div>
